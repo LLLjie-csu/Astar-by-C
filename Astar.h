@@ -2,11 +2,11 @@
 /********************************************************************
  * CopyRight (c) Central South University, all rights reserved.
  * Filename: Astar.h
- * Function: A*Ëã·¨£¬×îÓÅÂ·¾¶Ñ°ÕÒ
- * Author: Àî½Ü
+ * Function: A*ç®—æ³•ï¼Œæœ€ä¼˜è·¯å¾„å¯»æ‰¾
+ * Author: ææ°
  * Version: 1.0
  * Contact:  lijcsu@csu.edu.cn
- * Modified: v1.0, 3/26 2024, ´´½¨ÎÄ¼ş.
+ * Modified: v1.0, 3/26 2024, åˆ›å»ºæ–‡ä»¶.
  * Modified: 
  ********************************************************************/
 
@@ -19,33 +19,33 @@
 #include <utility> // for std::pair
 #include <QTextCodec>
 
-#define Maxvalue 1e6;//ÉèÖÃÒ»¸ö´óÊı
+#define Maxvalue 1e6;//è®¾ç½®ä¸€ä¸ªå¤§æ•°
 
- // ¶¨Òåµã½á¹¹
+ // å®šä¹‰ç‚¹ç»“æ„
 struct AstarPoint {
-	int x, y;  // µãµÄ×ø±ê
-	double f, g, h;  // f = g + h£¬gÎªÆğÊ¼µãµ½µ±Ç°µãµÄ´ú¼Û£¬hÎªµ±Ç°µãµ½ÖÕµãµÄÆô·¢Ê½´ú¼Û
-	AstarPoint* parent;  // ¸¸½ÚµãÖ¸Õë
+	int x, y;  // ç‚¹çš„åæ ‡
+	double f, g, h;  // f = g + hï¼Œgä¸ºèµ·å§‹ç‚¹åˆ°å½“å‰ç‚¹çš„ä»£ä»·ï¼Œhä¸ºå½“å‰ç‚¹åˆ°ç»ˆç‚¹çš„å¯å‘å¼ä»£ä»·
+	AstarPoint* parent;  // çˆ¶èŠ‚ç‚¹æŒ‡é’ˆ
 
-	AstarPoint(int _x, int _y) : x(_x), y(_y), f(0), g(0), h(0), parent(nullptr) {}//¹¹Ôìº¯Êı
+	AstarPoint(int _x, int _y) : x(_x), y(_y), f(0), g(0), h(0), parent(nullptr) {}//æ„é€ å‡½æ•°
 
-	void calculateH(const AstarPoint& end) {// Æô·¢Ê½º¯Êı,¿É×ÔĞĞ¸ü¸Ä¾àÀë¼ÆËãµÄ¹æÔò
+	void calculateH(const AstarPoint& end) {// å¯å‘å¼å‡½æ•°,å¯è‡ªè¡Œæ›´æ”¹è·ç¦»è®¡ç®—çš„è§„åˆ™
 		//h = abs(x - end.x) + abs(y - end.y);
 		h = std::sqrt((x - end.x)* (x - end.x)+ (y - end.y)*(y - end.y));
 	}
 
-	void calculateF() {// ¼ÆËã×Ü´ú¼Û f = g + h
+	void calculateF() {// è®¡ç®—æ€»ä»£ä»· f = g + h
 		f = g + h;
 	}
 };
-// ¶¨Òå±È½Ïº¯ÊıÓÃÓÚÓÅÏÈ¶ÓÁĞÅÅĞò
+// å®šä¹‰æ¯”è¾ƒå‡½æ•°ç”¨äºä¼˜å…ˆé˜Ÿåˆ—æ’åº
 struct ComparePoint {
 	bool operator()(AstarPoint* p1, AstarPoint* p2) {
-		return p1->f > p2->f;  // °´ÕÕ×Ü´ú¼Û´ÓĞ¡µ½´óÅÅĞò
+		return p1->f > p2->f;  // æŒ‰ç…§æ€»ä»£ä»·ä»å°åˆ°å¤§æ’åº
 	}
 };
 
-// ×Ô¶¨Òå¹şÏ£º¯Êı
+// è‡ªå®šä¹‰å“ˆå¸Œå‡½æ•°
 struct PairHash {
 	template <class T1, class T2>
 	std::size_t operator()(const std::pair<T1, T2>& p) const {
@@ -58,17 +58,17 @@ struct PairHash {
 class Astar
 {
 public:
-	std::vector<AstarPoint*> AStarfindroad(const arma::Mat<float>& mat, const AstarPoint& start, const AstarPoint& end);
-	//ÅĞ¶Ï¸ÃµÄÁìÓòÄÚÓĞÎŞÕÏ°­Îï
+	std::vector<AstarPoint*> AStarfindroad(const arma::Mat<float>& grid, const AstarPoint& start, const AstarPoint& end);
+	//åˆ¤æ–­è¯¥çš„é¢†åŸŸå†…æœ‰æ— éšœç¢ç‰©
 	bool isneighbor_obstacle(const arma::Mat<float>& mask, std::pair<int, int>& oripoint);
 private:
-	//¶¨Òå¿É×ßµÄ·½Ïò(ÄÜ·ñĞ±×Å×ß)
-	std::vector<int> roaddx = { -1, -1, -1, 0, 0, 1, 1, 1 };//°ËÁìÓò
+	//å®šä¹‰å¯èµ°çš„æ–¹å‘(èƒ½å¦æ–œç€èµ°)
+	std::vector<int> roaddx = { -1, -1, -1, 0, 0, 1, 1, 1 };//å…«é¢†åŸŸ
 	std::vector<int> roaddy = { -1, 0, 1, -1, 1, -1, 0, 1 };
-	//std::vector<int> roaddx = { -1,0 ,0, 1, };//ËÄÁìÓò
+	//std::vector<int> roaddx = { -1,0 ,0, 1, };//å››é¢†åŸŸ
 	//std::vector<int> roaddy = { 0, -1,1, 0, };
 
-	double straight_gcost = 1.0;//Ö±×ßg cost
-	double oblique_gcost = 1.0;//Ğ±¶Ô½ÇÏßµÄg costÉè¶¨£¬ÕâÀïg costÉèÖÃÏàÍ¬£¬ÕâÑùÓÅÏÈ×ß¶Ô½ÇÏß
+	double straight_gcost = 1.0;//ç›´èµ°g cost
+	double oblique_gcost = 1.0;//æ–œå¯¹è§’çº¿çš„g costè®¾å®šï¼Œè¿™é‡Œg costè®¾ç½®ç›¸åŒï¼Œè¿™æ ·ä¼˜å…ˆèµ°å¯¹è§’çº¿
 
 };
